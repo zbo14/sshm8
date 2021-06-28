@@ -1,0 +1,7 @@
+#!/bin/bash
+
+sudo rm -f /etc/cron.d/sshm8
+echo "Deleted cronjob"
+
+sudo rm -f /usr/bin/sshm8
+echo "Removed ~/.ssm8 directory"

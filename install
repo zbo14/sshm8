@@ -1,0 +1,14 @@
+#!/bin/bash
+
+cd "$(dirname "$0")"
+
+sudo ln -fs "$PWD"/sshm8 /usr/bin/sshm8
+echo "Created symlink to executable"
+
+echo $'SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+0 12 * * * '"$(whoami)"' sshm8 rotate
+' | sudo tee /etc/cron.d/sshm8 > /dev/null
+
+echo "Created cronjob to rotate keys"

@@ -1,0 +1,40 @@
+#!/bin/bash -e
+
+cd "$(dirname "$(readlink -f "$0")")"
+
+output=/dev/null
+usage="Usage: ./sshm8 [-v] [command] <user>@<host>"
+
+while getopts "hv" opt; do
+    case "${opt}" in
+    h)
+    echo "$usage"
+    exit
+    ;;
+
+    v)
+    output=/dev/stdout
+    shift $((OPTIND-1))
+    ;;
+
+    *)
+    >&2 echo "$usage"
+    exit 1
+    ;;
+    esac
+done
+
+for script in scripts/*; do
+    if [ "$script" == scripts/"$1".sh ]; then
+        output="$output" bash -e "$script" "${@:2}"
+        exit
+    fi
+done
+
+echo "SSH-ing into server"
+
+ssh \
+    -i ~/.sshm8/"$1"/key \
+    -o BatchMode=yes \
+    -o ConnectTimeout=10 \
+    "$1"
